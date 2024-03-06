@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moc_4_2924/products_screen/product_detail_screen/product_detail_screen.dart';
 import 'package:moc_4_2924/products_screen/product_item.dart';
+import 'package:moc_4_2924/products_screen/products_bloc/products_bloc.dart';
 import 'package:moc_4_2924/webservices.dart';
 
 import '../models/product.dart';
@@ -13,10 +15,6 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
-  final List<Product> _products = [];
-  String? _error;
-  bool _isLoading = true;
-
   @override
   void initState() {
     super.initState();
@@ -24,17 +22,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   void _getAllProducts() async {
-    try {
-      final products = await WebServices.getAllProducts();
-      _products.clear();
-      _products.addAll(products);
-    } catch (error) {
-      _error = error.toString();
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+    final productsBloc = BlocProvider.of<ProductsBloc>(context);
+    productsBloc.add(GetAllProducts());
   }
 
   @override
@@ -43,38 +32,32 @@ class _ProductsScreenState extends State<ProductsScreen> {
       appBar: AppBar(
         title: const Text('Products'),
       ),
-      body: _buildContent(),
-    );
-  }
+      body: BlocBuilder<ProductsBloc, ProductsState>(
+        builder: (context, state) {
+          final products = state.products;
 
-  Widget _buildContent() {
-    if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
+          if(state.status == ProductsStatus.loading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
-    if (_error != null) {
-      return Center(
-        child: Text('Error: $_error'),
-      );
-    }
-
-    if (_products.isEmpty) {
-      return const Center(
-        child: Text('No products found'),
-      );
-    }
-
-    return ListView.builder(
-      itemCount: _products.length,
-      itemBuilder: (context, index) {
-        final product = _products[index];
-        return ProductItem(
-          product: product,
-          onTap: () => _onProductTap(product),
-        );
-      },
+          return ListView.builder(
+            itemCount: products.length,
+            itemBuilder: (context, index) {
+              final product = products[index];
+              return ProductItem(
+                product: product,
+                onTap: () => _onProductTap(product),
+              );
+            },
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.refresh),
+        onPressed: _getAllProducts,
+      ),
     );
   }
 
