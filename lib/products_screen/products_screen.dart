@@ -1,7 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:moc_4_2924/products_screen/product_detail_screen/product_detail_screen.dart';
+import 'package:moc_4_2924/products_screen/product_item.dart';
+import 'package:moc_4_2924/webservices.dart';
 
 import '../models/product.dart';
 
@@ -25,12 +25,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   void _getAllProducts() async {
     try {
-      final response = await http.get(Uri.parse('https://dummyjson.com/products'));
-      if (response.statusCode != 200) throw Exception('Failed to load products');
-      final List<dynamic> productsData = json.decode(response.body)['products'];
+      final products = await WebServices.getAllProducts();
       _products.clear();
-
-      _products.addAll(productsData.map((product) => Product.fromJson(product)).toList());
+      _products.addAll(products);
     } catch (error) {
       _error = error.toString();
     } finally {
@@ -51,19 +48,19 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget _buildContent() {
-    if(_isLoading) {
+    if (_isLoading) {
       return const Center(
         child: CircularProgressIndicator(),
       );
     }
 
-    if(_error != null) {
+    if (_error != null) {
       return Center(
         child: Text('Error: $_error'),
       );
     }
 
-    if(_products.isEmpty) {
+    if (_products.isEmpty) {
       return const Center(
         child: Text('No products found'),
       );
@@ -73,11 +70,15 @@ class _ProductsScreenState extends State<ProductsScreen> {
       itemCount: _products.length,
       itemBuilder: (context, index) {
         final product = _products[index];
-        return ListTile(
-          title: Text(product.name),
-          subtitle: Text(product.price.toString()),
+        return ProductItem(
+          product: product,
+          onTap: () => _onProductTap(product),
         );
       },
     );
+  }
+
+  void _onProductTap(Product product) {
+    ProductDetailScreen.navigateTo(context, product);
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:moc_4_2924/models/product.dart';
+import 'package:moc_4_2924/products_screen/product_detail_screen/product_detail_screen.dart';
 import 'package:moc_4_2924/products_screen/products_screen.dart';
 
 void main() {
@@ -10,8 +12,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: ProductsScreen(),
+      onGenerateRoute: (settings) {
+        Widget content = const SizedBox();
+
+        switch (settings.name) {
+          case ProductDetailScreen.routeName:
+            final arguments = settings.arguments;
+            if (arguments is Product) {
+              content = ProductDetailScreen(product: arguments);
+            }
+            break;
+        }
+
+        return MaterialPageRoute(builder: (context) => content);
+      },
     );
   }
 }
