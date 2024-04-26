@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moc_4_2924/products_screen/product_detail_screen/product_detail_screen.dart';
 import 'package:moc_4_2924/products_screen/product_item.dart';
 import 'package:moc_4_2924/products_screen/products_bloc/products_bloc.dart';
-import 'package:moc_4_2924/webservices.dart';
 
 import '../models/product.dart';
 
@@ -36,9 +35,15 @@ class _ProductsScreenState extends State<ProductsScreen> {
         builder: (context, state) {
           final products = state.products;
 
-          if(state.status == ProductsStatus.loading) {
+          if (state.status == ProductsStatus.loading) {
             return const Center(
               child: CircularProgressIndicator(),
+            );
+          }
+
+          if (state.status == ProductsStatus.error) {
+            return const Center(
+              child: Text('Oups, une erreur est suvenue'),
             );
           }
 
