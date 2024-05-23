@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moc_4_2924/products_screen/cart_icon.dart';
+import 'package:moc_4_2924/products_screen/cart_screen/cart_screen.dart';
 import 'package:moc_4_2924/products_screen/product_detail_screen/product_detail_screen.dart';
 import 'package:moc_4_2924/products_screen/product_item.dart';
 import 'package:moc_4_2924/products_screen/products_bloc/products_bloc.dart';
@@ -30,6 +32,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Products'),
+        actions: [
+          CartIcon(
+            onTap: () => _onCartIconTap(context),
+          ),
+        ],
       ),
       body: BlocBuilder<ProductsBloc, ProductsState>(
         builder: (context, state) {
@@ -60,7 +67,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.refresh),
+        child: const Icon(Icons.refresh),
         onPressed: _getAllProducts,
       ),
     );
@@ -68,5 +75,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   void _onProductTap(Product product) {
     ProductDetailScreen.navigateTo(context, product);
+  }
+
+  void _onCartIconTap(BuildContext context) {
+    CartScreen.navigateTo(context);
   }
 }

@@ -30,7 +30,6 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
 
   Future<List<Product>> _getAllProducts() async {
     await Future.delayed(const Duration(seconds: 2));
-    throw Exception();
     return List.generate(10, (index) {
       return Product(
         id: index,
