@@ -20,12 +20,12 @@ class CartScreen extends StatelessWidget {
       ),
       body: BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
-          final products = state.products;
+          final products = state.products.toSet();
           return ListView.separated(
             itemCount: products.length,
             separatorBuilder: (context, index) => const SizedBox(height: 10),
             itemBuilder: (context, index) {
-              final product = products[index];
+              final product = products.elementAt(index);
               return ProductItem(product: product);
             },
           );

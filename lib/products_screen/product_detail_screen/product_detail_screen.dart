@@ -26,14 +26,31 @@ class ProductDetailScreen extends StatelessWidget {
       ),
       floatingActionButton: BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
-          final content = switch (state.status) {
-            CartStatus.addingProduct => const CircularProgressIndicator(),
-            _ => const Icon(Icons.add_shopping_cart),
+
+          final removeButtonContent = switch(state.status) {
+            CartStatus.removingProduct => const CircularProgressIndicator(),
+            _ => const Icon(Icons.remove),
           };
 
-          return FloatingActionButton(
-            child: content,
-            onPressed: () => _onAddToCartTap(context),
+          final addButtonContent = switch(state.status) {
+            CartStatus.addingProduct => const CircularProgressIndicator(),
+            _ => const Icon(Icons.add),
+          };
+
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton(
+                heroTag: 'toto',
+                child: removeButtonContent,
+                onPressed: () => _onRemoveCartTap(context),
+              ),
+              const SizedBox(height: 10),
+              FloatingActionButton(
+                child: addButtonContent,
+                onPressed: () => _onAddToCartTap(context),
+              ),
+            ],
           );
         },
       ),
@@ -44,5 +61,9 @@ class ProductDetailScreen extends StatelessWidget {
     // final cartBloc2 = BlocProvider.of<CartBloc>(context);
     // final cartBloc3 = context.read<CartBloc>();
     context.cartBloc.add(AddProduct(product: product));
+  }
+
+  void _onRemoveCartTap(BuildContext context) {
+    context.cartBloc.add(RemoveProduct(product: product));
   }
 }

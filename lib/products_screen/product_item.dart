@@ -20,10 +20,12 @@ class ProductItem extends StatelessWidget {
       subtitle: Text(product.price.toString()),
       trailing: BlocBuilder<CartBloc, CartState>(
         buildWhen: (previousState, nextState) {
-          if (nextState.status != CartStatus.addedProductWithSuccess) return false;
+          final hasCartSizeChanged = previousState.products.length != nextState.products.length;
           final previousOccurrences = previousState.products.where((element) => element.id == product.id).length;
           final nextOccurrences = nextState.products.where((element) => element.id == product.id).length;
-          return nextOccurrences != previousOccurrences;
+          if(!hasCartSizeChanged) return false;
+          if(previousOccurrences == nextOccurrences) return false;
+          return true;
         },
         builder: (context, state) {
           print('Building ${product.id} product');
