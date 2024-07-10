@@ -2,20 +2,23 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:moc_4_2924/models/app_exception.dart';
 
+import '../../app_repository/app_repository.dart';
 import '../../models/product.dart';
 
 part 'products_event.dart';
 part 'products_state.dart';
 
 class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
-  ProductsBloc() : super(const ProductsState()) {
+  final AppRepository appRepository;
+
+  ProductsBloc({required this.appRepository}) : super(const ProductsState()) {
     on<GetAllProducts>(_onGetAllProducts);
   }
 
   void _onGetAllProducts(GetAllProducts event, Emitter<ProductsState> emit) async {
     emit(state.copyWith(status: ProductsStatus.loading));
     try {
-      final products = await _getAllProducts();
+      final products = await appRepository.getAllProducts();
       emit(state.copyWith(
         status: ProductsStatus.success,
         products: products,
@@ -26,17 +29,5 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         error: UnknownException(),
       ));
     }
-  }
-
-  Future<List<Product>> _getAllProducts() async {
-    await Future.delayed(const Duration(seconds: 2));
-    return List.generate(10, (index) {
-      return Product(
-        id: index,
-        name: 'Product $index',
-        description: 'Description $index',
-        price: index.toDouble(),
-      );
-    });
   }
 }
