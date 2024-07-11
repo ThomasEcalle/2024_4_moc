@@ -1,7 +1,6 @@
 part of 'products_bloc.dart';
 
 enum ProductsStatus {
-  initial,
   loading,
   success,
   error,
@@ -13,7 +12,7 @@ class ProductsState {
   final AppException? error;
 
   const ProductsState({
-    this.status = ProductsStatus.initial,
+    this.status = ProductsStatus.loading,
     this.products = const [],
     this.error,
   });

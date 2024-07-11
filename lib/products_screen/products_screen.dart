@@ -57,6 +57,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
               );
             }
 
+            if (products.isEmpty) {
+              return const Center(
+                child: Text('Oups, aucun produit'),
+              );
+            }
+
             return ListView.builder(
               itemCount: products.length,
               itemBuilder: (context, index) {

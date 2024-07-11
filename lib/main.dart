@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moc_4_2924/app_repository/app_repository.dart';
 import 'package:moc_4_2924/app_repository/local_data_source/fake_local_data_source.dart';
+import 'package:moc_4_2924/app_repository/remote_data_source/api_data_source.dart';
 import 'package:moc_4_2924/app_repository/remote_data_source/fake_data_source.dart';
 import 'package:moc_4_2924/models/product.dart';
 import 'package:moc_4_2924/products_screen/cart_bloc/cart_bloc.dart';
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return RepositoryProvider(
       create: (context) => AppRepository(
-        remoteDataSource: FakeDataSource(),
+        remoteDataSource: ApiDataSource(),
         localDataSource: FakeLocalDataSource(),
       ),
       child: MultiBlocProvider(
