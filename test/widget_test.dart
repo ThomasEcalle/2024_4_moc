@@ -15,6 +15,7 @@ import 'package:moc_4_2924/app_repository/remote_data_source/fake_data_source.da
 import 'package:moc_4_2924/app_repository/remote_data_source/remote_data_source.dart';
 import 'package:moc_4_2924/models/product.dart';
 import 'package:moc_4_2924/products_screen/cart_bloc/cart_bloc.dart';
+import 'package:moc_4_2924/products_screen/product_item.dart';
 import 'package:moc_4_2924/products_screen/products_bloc/products_bloc.dart';
 import 'package:moc_4_2924/products_screen/products_screen.dart';
 
@@ -127,6 +128,24 @@ void main() {
 
       await tester.pumpAndSettle();
       expect(find.text('Oups, aucun produit'), findsOneWidget);
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('Should show a products list on success', (WidgetTester tester) async {
+      await tester.pumpWidget(_buildProductsScreen(
+        remoteDataSource: FakeDataSource(),
+      ));
+
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ProductItem), findsAtLeast(4));
+      expect(find.text('name 0'), findsOneWidget);
+      expect(find.text('Prix: 3.0'), findsOneWidget);
+      expect(find.text('name 1'), findsOneWidget);
+      expect(find.text('name 2'), findsOneWidget);
+      expect(find.text('name 3'), findsOneWidget);
+      expect(find.text('name 4'), findsNothing);
+
       await tester.pumpAndSettle();
     });
   });

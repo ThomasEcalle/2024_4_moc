@@ -17,7 +17,7 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(product.name),
-      subtitle: Text(product.price.toString()),
+      subtitle: Text('Prix: ${product.price}'),
       trailing: BlocBuilder<CartBloc, CartState>(
         buildWhen: (previousState, nextState) {
           final hasCartSizeChanged = previousState.products.length != nextState.products.length;
